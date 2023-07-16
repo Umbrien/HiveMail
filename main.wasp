@@ -103,3 +103,18 @@ entity Message {=psl
   receiver    String
   isSent      Boolean     @default(false)
 psl=}
+
+
+// Procedures
+
+crud Messages {
+  entity: Message,
+  operations: {
+    get: {},
+    create: {
+      overrideFn: import { createMessage } from "@server/messages.js"
+    },
+    update: {},
+    delete: {},
+  }
+}

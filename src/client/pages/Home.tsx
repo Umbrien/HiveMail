@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import useAuth from "@wasp/auth/useAuth";
+import { Messages } from "@wasp/crud/Messages";
 import { MainLayout } from "../layouts/MainLayout";
 import { H1 } from "../components/headers";
 import { IconSend, IconCircleCheckFilled } from "@tabler/icons-react";
@@ -14,19 +15,22 @@ export function Home() {
   const [isPublic, setIsPublic] = useState(false);
   const [isSent, setIsSent] = useState(false);
 
+  const createMessage = Messages.create.useAction();
+
   const handleCreateMessage = () => {
     if (!title || !body || !receiver || !sendAt) {
       alert("Please fill in all fields.");
       return;
     }
-    console.log("createMessage", {
+    createMessage({
       title,
       body,
       isPublic,
       sendAt: new Date(sendAt),
       receiver,
+    }).then(() => {
+      setIsSent(true);
     });
-    setIsSent(true);
   };
 
   return (
