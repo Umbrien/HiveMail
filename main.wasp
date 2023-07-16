@@ -1,0 +1,95 @@
+app hiveMail {
+  wasp: {
+    version: "^0.11.0"
+  },
+  title: "hive-mail",
+
+  auth: {
+    userEntity: User,
+    methods: {
+      email: {
+        fromField: {
+          name: "HiveMail",
+          email: "hello@hivemail.org",
+        },
+        emailVerification: {
+          clientRoute: EmailVerificationRoute,
+          getEmailContentFn: import { getVerificationEmailContent } from "@server/auth/email.js",
+        },
+        passwordReset: {
+          clientRoute: PasswordResetRoute,
+          getEmailContentFn: import { getPasswordResetEmailContent } from "@server/auth/email.js",
+        },
+        allowUnverifiedLogin: true,
+      }
+    },
+    onAuthFailedRedirectTo: "/login",
+  },
+
+  emailSender: {
+    provider: SMTP,
+    defaultFrom: {
+      name: "HiveMail",
+      email: "hello@hivemail.org",
+    }
+  },
+
+  db: {
+    system: PostgreSQL
+  },
+
+  dependencies: [
+    ("@tabler/icons-react", "2.25.0"),
+  ]
+}
+
+// Routes
+
+route RootRoute { path: "/", to: MainPage }
+page MainPage {
+  component: import Main from "@client/MainPage.jsx"
+}
+
+route EmailVerificationRoute { path: "/email-verification", to: EmailVerificationPage }
+page EmailVerificationPage {
+  component: import { EmailVerification } from "@client/pages/auth/EmailVerification.tsx"
+}
+
+route PasswordResetRoute { path: "/password-reset", to: PasswordResetPage }
+page PasswordResetPage {
+  component: import { PasswordReset } from "@client/pages/auth/PasswordReset.tsx",
+}
+
+route LoginPage { path: "/login", to: LoginPage }
+page LoginPage {
+  component: import { LoginPage } from "@client/pages/auth/LoginPage.tsx"
+}
+
+route SignupPage { path: "/signup", to: SignupPage }
+page SignupPage {
+  component: import { SignupPage } from "@client/pages/auth/SignupPage.tsx"
+}
+
+// Entities
+
+entity User {=psl
+  id                        Int           @id @default(autoincrement())
+  email                     String?       @unique
+  isEmailVerified           Boolean       @default(false)
+  emailVerificationSentAt   DateTime?
+  password                  String?
+  passwordResetSentAt       DateTime?
+  message                   Message[]
+psl=}
+
+entity Message {=psl 
+  id          String      @id @default(cuid())
+  title       String
+  body        String
+  isPublic    Boolean     @default(false)
+  author      User?       @relation(fields: [userId], references: [id])
+  userId      Int?
+  sendAt      DateTime
+  receiver    String
+  isSent      Boolean     @default(false)
+psl=}
