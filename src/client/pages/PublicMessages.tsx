@@ -1,5 +1,7 @@
 import { Message } from "@wasp/entities";
+import { useQuery } from "@wasp/queries";
 import { MainLayout } from "../layouts/MainLayout";
+import getPublicUnsentMessages from "@wasp/queries/getPublicUnsentMessages";
 import { H1 } from "../components/headers";
 import { prettyDateFromString } from "../utils";
 
@@ -33,28 +35,28 @@ function MessageCard({
 }
 
 export function PublicMessages() {
+  const {
+    data: messages,
+    isLoading,
+    error,
+  } = useQuery(getPublicUnsentMessages);
+
+  if (isLoading) return "Loading...";
+  if (error) return "Error: " + error;
+
   return (
     <MainLayout>
       <div className="flex flex-col my-4 p-4">
         <H1 className="self-center mb-4">Public messages</H1>
-        <MessageCard
-          id={"1"}
-          title={"message title"}
-          description={"message description"}
-          sendAt={new Date()}
-        />
-        <MessageCard
-          id={"2"}
-          title={"2 message title"}
-          description={"message description"}
-          sendAt={new Date()}
-        />
-        <MessageCard
-          id={"10"}
-          title={"message 10 title"}
-          description={"message description"}
-          sendAt={new Date()}
-        />
+        {messages.map((message: Message) => (
+          <MessageCard
+            key={message.id}
+            id={message.id}
+            title={message.title}
+            description={message.body}
+            sendAt={message.sendAt}
+          />
+        ))}
       </div>
     </MainLayout>
   );

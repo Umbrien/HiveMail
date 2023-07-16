@@ -118,3 +118,13 @@ crud Messages {
     delete: {},
   }
 }
+
+query getUserUnsentMessages {
+  fn: import { getUserUnsentMessages } from "@server/messages.js",
+  entities: [Message]
+}
+
+query getPublicUnsentMessages {
+  fn: import { getPublicUnsentMessages } from "@server/messages.js",
+  entities: [Message]
+}
