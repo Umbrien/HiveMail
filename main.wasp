@@ -128,3 +128,17 @@ query getPublicUnsentMessages {
   fn: import { getPublicUnsentMessages } from "@server/messages.js",
   entities: [Message]
 }
+
+// Jobs
+
+job SendMessages {
+  executor: PgBoss,
+  perform: {
+    fn: import { sendMessages } from "@server/jobs/sendMessages.js",
+  },
+  schedule: {
+    cron: "* * * * *", // every minute
+    // cron: "0 * * * *", // every hour
+  },
+  entities: [Message]
+}
