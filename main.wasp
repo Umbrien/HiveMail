@@ -50,6 +50,16 @@ page MainPage {
   component: import { Home } from "@client/pages/Home.tsx"
 }
 
+route YourMessagesRoute { path: "/your-messages", to: YourMessagesPage }
+page YourMessagesPage {
+  component: import { YourMessages } from "@client/pages/YourMessages.tsx"
+}
+
+route PublicMessagesRoute { path: "/public-messages", to: PublicMessagesPage }
+page PublicMessagesPage {
+  component: import { PublicMessages } from "@client/pages/PublicMessages.tsx"
+}
+
 route EmailVerificationRoute { path: "/email-verification", to: EmailVerificationPage }
 page EmailVerificationPage {
   component: import { EmailVerification } from "@client/pages/auth/EmailVerification.tsx"
