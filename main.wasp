@@ -47,7 +47,7 @@ app hiveMail {
 
 route RootRoute { path: "/", to: MainPage }
 page MainPage {
-  component: import Main from "@client/MainPage.jsx"
+  component: import { Home } from "@client/pages/Home.tsx"
 }
 
 route EmailVerificationRoute { path: "/email-verification", to: EmailVerificationPage }
