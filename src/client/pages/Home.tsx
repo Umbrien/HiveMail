@@ -5,6 +5,7 @@ import { Messages } from "@wasp/crud/Messages";
 import { MainLayout } from "../layouts/MainLayout";
 import { H1 } from "../components/headers";
 import { IconSend, IconCircleCheckFilled } from "@tabler/icons-react";
+import { prettyDateFromString } from "../utils";
 
 export function Home() {
   const { data: user } = useAuth();
@@ -130,7 +131,7 @@ export function Home() {
             <span className="sr-only">Info</span>
             <div>
               <span className="font-medium">Message saved!</span> It will be
-              sent at {sendAt}
+              sent at {prettyDateFromString(new Date(sendAt))}.
             </div>
           </div>
         )}
